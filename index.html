@@ -59,6 +59,7 @@
                 .addTo(map)
                 .bindPopup(parish)
                 .on("click", () => {
+                    localStorage.setItem("selectedParish", parish);
                     window.location.href = `alerts.html?parish=${encodeURIComponent(parish)}&lat=${coords[0]}&lon=${coords[1]}`;
                 });
         });
