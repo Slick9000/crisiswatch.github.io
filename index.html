@@ -59,7 +59,7 @@
                 .addTo(map)
                 .bindPopup(parish)
                 .on("click", () => {
-                    window.location.href = `alerts.html?parish=${encodeURIComponent(parish)}&lat=${coords[0]}&lon=${coords[1]}`;
+                    window.location.href = `alerts.html?lat=${coords[0]}&lon=${coords[1]}`;
                 });
         });
     </script>
