@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hurricane Alerts</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+        }
+        header {
+            background: #007bff;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        nav {
+            background: white;
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin-top: 0.5rem;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            z-index: 2000;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        #map {
+            height: 330px;
+            margin-top: 1rem;
+        }
+        .container {
+            padding: 1rem;
+        }
+        #weather-data {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 style="margin: 0">Hurricane Alerts</h1>
+    </header>
+
+    <nav>
+        <div class="dropdown">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/640px-Hamburger_icon.svg.png" alt="Menu" style="width: 30px; cursor: pointer;" />
+            <div class="dropdown-content">
+                <a href="alerts.html">Alerts</a>
+                <a href="educational_content.html">Educational Content</a>
+                <a href="report_damage.html">Report Damage</a>
+                <a href="provide_feedback.html">Provide Feedback</a>
+            </div>
+        </div>
+    </nav>
+
+    <div id="map"></div>
+    <div class="container" id="alerts">
+        <h2>Weather Alerts & Forecast</h2>
+        <div id="weather-data">Please select a parish or use your location.</div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        const parishCoords = {
+            "Christ Church": [13.08257,-59.53946],
+            "Saint Andrew": [13.2459239,-59.5627175],
+            "Saint George": [13.138653,-59.561673],
+            "Saint James": [13.1856979,-59.6374323],
+            "Saint John": [13.1839916,-59.5019033],
+            "Saint Joseph": [13.2003197,-59.5387963],
+            "Saint Lucy": [13.3040108,-59.6098562],
+            "Saint Michael": [13.0980849,-59.6172935],
+            "Saint Peter": [13.2676304,-59.6210298],
+            "Saint Philip": [13.1192573,-59.4761998],
+        }
+
+        const map = L.map("map").setView([13.1774,-59.5263], 10)
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "&copy; OpenStreetMap contributors",
+        }).addTo(map)
+
+        Object.entries(parishCoords).forEach(([parish, coords]) => {
+            L.marker(coords)
+                .addTo(map)
+                .bindPopup(parish)
+                .on("click", () => {
+                    fetchWeather(coords[0], coords[1])
+                })
+        })
+
+        async function fetchWeather(lat, lon) {
+            const API_KEY = "6a37f992dfd748d5a2240721250404";
+            
+            try {
+                const currentRes = await fetch(`http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${lat},${lon}`);
+                const currentConditions = await currentRes.json();
+                const forecastRes = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=5`);
+                const forecastData = await forecastRes.json();
+                displayWeather(currentConditions, forecastData.forecast.forecastday);
+            } catch (error) {
+                alert("Error fetching weather data.");
+                console.log(error);
+            }
+        }
+
+        function displayWeather(currentConditions, forecastDays) {
+            const container = document.getElementById("weather-data");
+            let html = `<h3>Current Conditions</h3>`;
+            if (currentConditions) {
+                const current = currentConditions.current;
+                html += `<p>${current.condition.text} - ${current.temp_c}°C</p>`;
+            } else {
+                html += `<p>No current conditions available.</p>`;
+            }
+            html += `<h3>Forecast</h3>`;
+            forecastDays.forEach((day) => {
+                html += `<p>${day.date}: Max ${day.day.maxtemp_c}°C, Min ${day.day.mintemp_c}°C - ${day.day.condition.text}</p>`;
+            });
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
