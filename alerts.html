@@ -44,6 +44,7 @@
             text-decoration: none;
             display: block;
             border-bottom: 1px solid #000000;
+            border: 1px solid #000;
         }
         #map {
             height: 330px;
@@ -110,35 +111,65 @@
         })
 
         async function fetchWeather(lat, lon) {
-            const API_KEY = "6a37f992dfd748d5a2240721250404";
-            
+            const API_KEY = "6a37f992dfd748d5a2240721250404"
+
             try {
-                const currentRes = await fetch(`http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${lat},${lon}`);
-                const currentConditions = await currentRes.json();
-                const forecastRes = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=5`);
-                const forecastData = await forecastRes.json();
-                displayWeather(currentConditions, forecastData.forecast.forecastday);
+            // Fetch current conditions
+            const currentRes = await fetch(
+                `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${lat},${lon}`,
+            )
+            const currentConditions = await currentRes.json()
+
+            // Fetch forecast (e.g., for the next 3 days)
+            const forecastRes = await fetch(
+                `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=1`,
+            )
+            const forecastData = await forecastRes.json()
+
+            // Fetch alerts if needed (WeatherAPI.com does not have a separate alerts endpoint)
+            const alertsRes = await fetch(
+                `http://api.weatherapi.com/v1/alerts.json?key=${API_KEY}&q=${lat},${lon}`,
+            )
+            const alerts = await alertsRes.json()
+
+            displayWeather(
+                currentConditions,
+                forecastData.forecast.forecastday,
+                alerts,
+            )
             } catch (error) {
-                alert("Error fetching weather data.");
-                console.log(error);
+            alert("Error fetching weather data.")
+            console.log(error)
             }
+      }
+
+      function displayWeather(currentConditions, forecastDays, alerts) {
+        const container = document.getElementById("weather-data")
+        let html = `<h3>Current Conditions</h3>`
+
+        if (currentConditions) {
+          const current = currentConditions.current
+          html += `<p>${current.condition.text} - ${current.temp_c}°C</p>`
+        } else {
+          html += `<p>No current conditions available.</p>`
         }
 
-        function displayWeather(currentConditions, forecastDays) {
-            const container = document.getElementById("weather-data");
-            let html = `<h3>Current Conditions</h3>`;
-            if (currentConditions) {
-                const current = currentConditions.current;
-                html += `<p>${current.condition.text} - ${current.temp_c}°C</p>`;
-            } else {
-                html += `<p>No current conditions available.</p>`;
-            }
-            html += `<h3>Forecast</h3>`;
-            forecastDays.forEach((day) => {
-                html += `<p>${day.date}: Max ${day.day.maxtemp_c}°C, Min ${day.day.mintemp_c}°C - ${day.day.condition.text}</p>`;
-            });
-            container.innerHTML = html;
+        html += `<h3>Forecast</h3>`
+        forecastDays.forEach((day) => {
+          html += `<p>${day.date}: Max ${day.day.maxtemp_c}°C, Min ${day.day.mintemp_c}°C - ${day.day.condition.text}</p>`
+        })
+        
+        html += `<h3>Alerts</h3>`
+        if (alerts && alerts.alert) {
+          alerts.alert.forEach((alert) => {
+            html += `<p><strong>${alert.headline}</strong>: ${alert.desc}</p>`
+          })
+        } else {
+          html += `<p>No current alerts.</p>`
         }
+
+        container.innerHTML = html
+      }
     </script>
 </body>
 </html>
