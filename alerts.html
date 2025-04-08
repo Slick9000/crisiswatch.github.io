@@ -137,14 +137,17 @@
         const lon = urlParams.get('lon');
 
         if (parish && lat && lon) {
-            localStorage.setItem('lastAccessedUrl', window.location.href);
+            localStorage.setItem('parish', parish);
+            localStorage.setItem('lat', lat);
+            localStorage.setItem('lon', lon);
             document.getElementById("parish-name").innerText = parish;
             fetchWeather();
         } else {
+            const parish = localStorage.getItem('parish');
+            const lat = localStorage.getItem('lat');
+            const lon = localStorage.getItem('lon');
             const lastAccessedUrl = localStorage.getItem('lastAccessedUrl');
-            if (lastAccessedUrl) {
-                window.location.href = lastAccessedUrl;
-            } else {
+            if (!parish && !lat && !lon) {
                 alert("No initial location selected. Please access the map to select a parish.");
             }
         }
