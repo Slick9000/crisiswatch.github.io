@@ -68,7 +68,7 @@
 
             const clickedMarker = L.marker(clickedCoords).addTo(map);
             
-            const confirmSelection = confirm(`Confirm location: ${clickedCoords.lat.toFixed(5)}, ${clickedCoords.lng.toFixed(5)}?`);
+            const confirmSelection = confirm(`Confirm location?`);
             if (confirmSelection) {
                 window.location.href = `alerts.html?lat=${clickedCoords.lat}&lon=${clickedCoords.lng}`;
                 map.removeLayer(clickedMarker);
