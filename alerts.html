@@ -138,18 +138,15 @@
         const urlParams = new URLSearchParams(window.location.search);
         const lat = urlParams.get('lat');
         const lon = urlParams.get('lon');
-        const location = urlParams.get('location')
 
-        if (lat && lon && location) {
+        if (lat && lon) {
             localStorage.setItem('lat', lat);
             localStorage.setItem('lon', lon);
-            document.getElementById("location-name").innerText = locaiton;
             fetchWeather();
         } else {
             const lat = localStorage.getItem('lat');
             const lon = localStorage.getItem('lon');
-            const location = localStorage.getItem('location')
-            if (!lat && !lon && !location) {
+            if (!lat && !lon) {
                 alert("No initial location selected. Please access the map to select a parish.");
             }
         }
@@ -179,10 +176,11 @@
             let html = `<h1 class="current">Current Conditions</h1>`;
 
             if (currentConditions) {
+                const location = currentConditions.location;
                 const current = currentConditions.current;
-                location = current.location.region, current.location.country;
-                document.getElementById("location-name").innerText = location
-                localStorage.setItem('location', location);
+
+                const selected_location = `${location.region}\n${location.country}`;
+                document.getElementById("location-name").innerText = selected_location;
                 html += `<p class="current">${current.condition.text} - ${current.temp_c}°C</p>`;
             } else {
                 html += `<p class="current">No current conditions available.</p>`;
