@@ -136,6 +136,10 @@
         const lat = urlParams.get('lat');
         const lon = urlParams.get('lon');
 
+        if (!parish) {
+            parish = localStorage.getItem("selectedParish");
+        }
+
         document.getElementById("parish-name").innerText = parish;
 
         async function fetchWeather() {
