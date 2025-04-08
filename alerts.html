@@ -136,11 +136,18 @@
         const lat = urlParams.get('lat');
         const lon = urlParams.get('lon');
 
-        if (!parish) {
-            parish = localStorage.getItem("selectedParish");
+        if (parish && lat && lon) {
+            localStorage.setItem('lastAccessedUrl', window.location.href);
+            document.getElementById("parish-name").innerText = parish;
+            fetchWeather();
+        } else {
+            const lastAccessedUrl = localStorage.getItem('lastAccessedUrl');
+            if (lastAccessedUrl) {
+                window.location.href = lastAccessedUrl;
+            } else {
+                alert("No initial location selected. Please access the map to select a parish.");
+            }
         }
-
-        document.getElementById("parish-name").innerText = parish;
 
         async function fetchWeather() {
             const API_KEY = "6a37f992dfd748d5a2240721250404";
