@@ -47,7 +47,7 @@
             "Saint Michael": [13.0980849,-59.6172935],
             "Saint Peter": [13.2676304,-59.6210298],
             "Saint Philip": [13.1192573,-59.4761998],
-        }
+        };
 
         const map = L.map("map").setView([13.1774,-59.5263], 10);
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -61,6 +61,20 @@
                 .on("click", () => {
                     window.location.href = `alerts.html?lat=${coords[0]}&lon=${coords[1]}`;
                 });
+        });
+
+        map.on("click", (e) => {
+            const clickedCoords = e.latlng;
+
+            const clickedMarker = L.marker(clickedCoords).addTo(map);
+            
+            const confirmSelection = confirm(`Confirm location: ${clickedCoords.lat.toFixed(5)}, ${clickedCoords.lng.toFixed(5)}?`);
+            if (confirmSelection) {
+                window.location.href = `alerts.html?lat=${clickedCoords.lat}&lon=${clickedCoords.lng}`;
+                map.removeLayer(clickedMarker);
+            } else {
+                map.removeLayer(clickedMarker);
+            }
         });
     </script>
 </body>
