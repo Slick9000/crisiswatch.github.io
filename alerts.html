@@ -124,7 +124,7 @@
             <div id="alerts-data"></div>
         </div>
         <div class="weather-info">
-            <h1 class="current" id="parish-name"></h1>
+            <h1 class="current" id="location-name"></h1>
             <div id="weather-data"></div>
             <div class="report-button">
                 <a href="report_damage.html">
@@ -136,22 +136,20 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const parish = urlParams.get('parish');
         const lat = urlParams.get('lat');
         const lon = urlParams.get('lon');
+        const location = urlParams.get('location')
 
-        if (parish && lat && lon) {
-            localStorage.setItem('parish', parish);
+        if (lat && lon && location) {
             localStorage.setItem('lat', lat);
             localStorage.setItem('lon', lon);
-            document.getElementById("parish-name").innerText = parish;
+            document.getElementById("location-name").innerText = locaiton;
             fetchWeather();
         } else {
-            const parish = localStorage.getItem('parish');
             const lat = localStorage.getItem('lat');
             const lon = localStorage.getItem('lon');
-            const lastAccessedUrl = localStorage.getItem('lastAccessedUrl');
-            if (!parish && !lat && !lon) {
+            const location = localStorage.getItem('location')
+            if (!lat && !lon && !location) {
                 alert("No initial location selected. Please access the map to select a parish.");
             }
         }
@@ -182,6 +180,9 @@
 
             if (currentConditions) {
                 const current = currentConditions.current;
+                location = current.location.region, current.location.country;
+                document.getElementById("location-name").innerText = location
+                localStorage.setItem('location', location);
                 html += `<p class="current">${current.condition.text} - ${current.temp_c}°C</p>`;
             } else {
                 html += `<p class="current">No current conditions available.</p>`;
