@@ -1,117 +1,163 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Provide Feedback</title>
+    <title>Report Damage</title>
     <style>
-      body {
-        font-family: sans-serif;
-        margin: 0;
-      }
-      header {
-        background: #007bff;
-        color: white;
-        padding: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      nav {
-        background: white;
-        padding: 0.5rem;
-        border-radius: 5px;
-        margin-top: 0.5rem;
-      }
-      .dropdown {
-        position: relative;
-        display: inline-block;
-      }
-      .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        min-width: 160px;
-        z-index: 1;
-      }
-      .dropdown:hover .dropdown-content {
-        display: block;
-      }
-      .dropdown-content a {
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-      }
-      form {
-        margin: 2rem;
-        padding: 1rem;
-        background: #f2f2f2;
-        border-radius: 10px;
-      }
-      label {
-        display: block;
-        margin-top: 0.5rem;
-        font-weight: bold;
-      }
-      input, textarea {
-        width: 100%;
-        padding: 0.5rem;
-        margin-top: 0.25rem;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-      }
-      button.submit {
-        margin-top: 1rem;
-        background: #007bff;
-        color: white;
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-      button.submit:hover {
-        background: #0056b3;
-      }
+        body {
+            font-family: sans-serif;
+            margin: 0;
+        }
+        header {
+            background: #007bff;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        nav {
+            background: white;
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin-top: 0.5rem;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            z-index: 1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        form {
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #f2f2f2;
+            border-radius: 10px;
+            width: 650px;
+        }
+        label {
+            display: block;
+            margin-top: 0.5rem;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            padding: 0.5rem;
+            margin-top: 0.25rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .fields {
+            display: flex;
+            gap: 50px;
+        }
+        .fields input {
+            width: 24%;
+        }
+        textarea {
+            resize: none;
+            width: 640px;
+            height: 120px;
+        }
+        .char-count {
+            text-align: right;
+            font-size: 0.9em;
+            color: #666;
+        }
+        button.submit {
+            margin-top: 1rem;
+            background: #007bff;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 100px;
+            width: 100px;
+            cursor: pointer;
+        }
+        button.submit:hover {
+            background: #0056b3;
+        }
+        .report-button {
+            display: flex;
+            justify-content: center;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <header>
-      <h1 style="margin: 0">Provide Feedback</h1>
+        <h1 style="margin: 0">Provide Feedback</h1>
     </header>
 
     <nav>
-      <div class="dropdown">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/640px-Hamburger_icon.svg.png" alt="Menu" style="width: 30px; cursor: pointer;" />
-        <div class="dropdown-content">
-          <a href="alerts.html">Alerts</a>
-          <a href="educational_content.html">Educational Content</a>
-          <a href="report_damage.html">Report Damage</a>
-          <a href="provide_feedback.html">Provide Feedback</a>
+        <div class="dropdown">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/640px-Hamburger_icon.svg.png" alt="Menu" style="width: 30px; cursor: pointer;" />
+            <div class="dropdown-content">
+                <a href="alerts.html">Alerts</a>
+                <a href="educational_content.html">Educational Content</a>
+                <a href="report_damage.html">Report Damage</a>
+                <a href="provide_feedback.html">Provide Feedback</a>
+            </div>
         </div>
-      </div>
     </nav>
 
-    <form id="feedback" onsubmit="submitForm(event, 'Feedback')">
-      <h2>Submit Feedback</h2>
-      <label for="feedback-first">First Name</label>
-      <input type="text" id="feedback-first" required />
+    <form id="report" onsubmit="submitForm(event, 'Report')">
+        <div class="fields">
+            <input type="text" id="report-first" placeholder="First Name" required />
+            <input type="text" id="report-last" placeholder="Last Name" required />
 
-      <label for="feedback-last">Last Name</label>
-      <input type="text" id="feedback-last" required />
+            <select id="parish-select" required>
+              <option value="">Select Parish</option>
+              <option value="Christ Church">Christ Church</option>
+              <option value="Saint Andrew">Saint Andrew</option>
+              <option value="Saint George">Saint George</option>
+              <option value="Saint James">Saint James</option>
+              <option value="Saint John">Saint John</option>
+              <option value="Saint Joseph">Saint Joseph</option>
+              <option value="Saint Lucy">Saint Lucy</option>
+              <option value="Saint Michael">Saint Michael</option>
+              <option value="Saint Peter">Saint Peter</option>
+              <option value="Saint Philip">Saint Philip</option>
+              <option value="Saint Thomas">Saint Thomas</option>
+            </select>
+        </div>
+        <br>
+        <label for="report-desc">Describe the details of the damage in the text box below:</label>
+        <textarea id="report-desc" rows="6" maxlength="200" required placeholder="Enter description here..."></textarea>
+        <div class="char-count">0/200 characters</div>
 
-      <label for="feedback-desc">Description</label>
-      <textarea id="feedback-desc" rows="4" required></textarea>
-
-      <button type="submit" class="submit">Submit Feedback</button>
+        <div class="report-button">
+          <button style="display: flex; justify-content: center;" type="submit" class="submit">Submit</button>
+        </div>
     </form>
 
     <script>
-      function submitForm(event, type) {
-        event.preventDefault();
-        alert(`${type} submitted!`);
-        event.target.reset();
-      }
+        const textarea = document.getElementById('report-desc');
+        const charCount = document.querySelector('.char-count');
+
+        textarea.addEventListener('input', () => {
+            charCount.textContent = `${textarea.value.length}/200 characters`;
+        });
+
+        function submitForm(event, type) {
+            event.preventDefault();
+            alert(`${type} submitted!`);
+            event.target.reset();
+            charCount.textContent = '0/200 characters';
+        }
     </script>
-  </body>
+</body>
 </html>
