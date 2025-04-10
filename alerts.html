@@ -138,16 +138,16 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const lat = urlParams.get('lat');
-        const lon = urlParams.get('lon');
+        var lat = urlParams.get('lat');
+        var lon = urlParams.get('lon');
 
         if (lat && lon) {
             localStorage.setItem('lat', lat);
             localStorage.setItem('lon', lon);
             fetchWeather();
         } else {
-            const lat = localStorage.getItem('lat');
-            const lon = localStorage.getItem('lon');
+            var lat = localStorage.getItem('lat');
+            var lon = localStorage.getItem('lon');
             if (!lat && !lon) {
                 alert("No initial location selected. Please access the map to select a parish.");
             }
