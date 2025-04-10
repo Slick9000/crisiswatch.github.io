@@ -155,9 +155,36 @@
 
         function submitForm(event, type) {
             event.preventDefault();
-            alert(`${type} submitted!`);
-            event.target.reset();
-            charCount.textContent = '0/200 characters';
+            
+            const firstName = document.getElementById('report-first').value;
+            const lastName = document.getElementById('report-last').value;
+            const parish = document.getElementById('parish-select').value;
+            const description = document.getElementById('report-desc').value;
+
+            fetch('https://script.google.com/macros/s/AKfycbzlBLEKH3MVAxK4u6oHQR5uaW-G7AR4yZHB1y93QMlgvcf0Nyw5L2bD2zhtnTN5Waimrw/exec', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    firstName: firstName,
+                    lastName: lastName,
+                    parish: parish,
+                    description: description
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === "Success") {
+                    alert("Report submitted successfully!");
+                    document.getElementById('report').reset(); // Reset form on success
+                } else {
+                    alert("Error submitting report.");
+                }
+            })
+            .catch(error => {
+                alert("Error: " + error);
+            });
         }
     </script>
 </body>
