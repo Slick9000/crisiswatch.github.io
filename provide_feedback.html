@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Report Damage</title>
+    <title>Provide Feedback</title>
     <style>
         body {
             font-family: sans-serif;
@@ -93,7 +93,7 @@
         button.submit:hover {
             background: #0056b3;
         }
-        .report-button {
+        .feedback-button {
             display: flex;
             justify-content: center;
         }
@@ -115,23 +115,23 @@
         <h1 style="margin: 0">Provide Feedback</h1>
     </header>
 
-    <form id="report" onsubmit="submitForm(event, 'Report')">
+    <form id="feedback" onsubmit="submitForm(event, 'Feedback')">
         <div class="fields">
-            <input type="text" id="report-first" placeholder="First Name" required />
-            <input type="text" id="report-last" placeholder="Last Name" required />
+            <input type="text" id="feedback-first" placeholder="First Name" required />
+            <input type="text" id="feedback-last" placeholder="Last Name" required />
         </div>
         <br>
-        <label for="report-desc">Enter your feedback in the text box below:</label>
-        <textarea id="report-desc" rows="6" maxlength="200" required placeholder="Enter description here..."></textarea>
+        <label for="feedback-desc">Provide your feedback on what can be improved below:</label>
+        <textarea id="feedback-desc" rows="6" maxlength="200" required placeholder="Enter description here..."></textarea>
         <div class="char-count">0/200 characters</div>
 
-        <div class="report-button">
+        <div class="feedback-button">
           <button type="submit" class="submit">Submit</button>
         </div>
     </form>
 
     <script>
-        const textarea = document.getElementById('report-desc');
+        const textarea = document.getElementById('feedback-desc');
         const charCount = document.querySelector('.char-count');
 
         textarea.addEventListener('input', () => {
@@ -140,9 +140,34 @@
 
         function submitForm(event, type) {
             event.preventDefault();
-            alert(`${type} submitted!`);
-            event.target.reset();
-            charCount.textContent = '0/200 characters';
+            
+            const firstName = document.getElementById('feedback-first').value;
+            const lastName = document.getElementById('feedback-last').value;
+            const description = document.getElementById('feedback-desc').value;
+
+            fetch('https://script.google.com/macros/s/AKfycbyaAleQ7SytywXPy0c8ufdep2w-74rC_YO-hRZEUKwnt42IS4N9nytGsJet1CjZvOsa/exec', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    firstName: firstName,
+                    lastName: lastName,
+                    description: description
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === "Success") {
+                    alert("Feedback submitted successfully!");
+                    document.getElementById('feedback').reset(); // Reset form on success
+                } else {
+                    alert("Error submitting feedback.");
+                }
+            })
+            .catch(error => {
+                alert("Error: " + error);
+            });
         }
     </script>
 </body>
