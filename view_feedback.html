@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Feedback Submissions</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+        }
+        header {
+            background: #007bff;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        nav {
+            background: white;
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin-top: 0.5rem;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            z-index: 1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #000000;
+        }
+        .submission {
+            background: #f2f2f2;
+            margin: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="dropdown">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/640px-Hamburger_icon.svg.png" alt="Menu" style="width: 30px; cursor: pointer;" />
+                <div class="dropdown-content">
+                    <a href="alerts.html">Alerts</a>
+                    <a href="educational_content.html">Educational Content</a>
+                    <a href="report_damage.html">Report Damage</a>
+                    <a href="provide_feedback.html">Provide Feedback</a>
+                </div>
+            </div>
+        </nav>
+        <h1 style="margin: 0">Feedback Submissions</h1>
+    </header>
+
+    <br>
+    <br>
+
+    <div id="loading" style="display: none; text-align: center;">Loading submissions, please wait...</div>
+    <div id="submissions">
+    </div>
+
+    <script>
+        const loadingMessage = document.getElementById('loading');
+        const submissionsDiv = document.getElementById('submissions');
+
+        loadingMessage.style.display = 'block';
+        submissionsDiv.style.display = 'none';
+
+        fetch('https://script.google.com/macros/s/AKfycbyaAleQ7SytywXPy0c8ufdep2w-74rC_YO-hRZEUKwnt42IS4N9nytGsJet1CjZvOsa/exec')
+            .then(response => response.json())
+            .then(data => {
+                loadingMessage.style.display = 'none';
+                submissionsDiv.style.display = 'block';
+
+                data.forEach(submission => {
+                    const submissionDiv = document.createElement('div');
+                    submissionDiv.classList.add('submission');
+                    submissionDiv.innerHTML = `<strong>First Name:</strong> ${submission.firstName}<br>
+                                            <strong>Last Name:</strong> ${submission.lastName}<br>
+                                            <strong>Parish:</strong> ${submission.parish}<br>
+                                            <strong>Description:</strong> ${submission.description}`;
+                    submissionsDiv.appendChild(submissionDiv);
+                });
+            })
+            .catch(error => {
+                loadingMessage.style.display = 'none';
+                console.error('Error fetching submissions:', error);
+            });
+    </script>
+</body>
+</html>
