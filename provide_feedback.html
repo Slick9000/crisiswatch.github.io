@@ -50,7 +50,8 @@
             padding: 1rem;
             background: #f2f2f2;
             border-radius: 10px;
-            width: 650px;
+            width: 90%;
+            max-width: 650px;
         }
         label {
             display: block;
@@ -62,17 +63,19 @@
             margin-top: 0.25rem;
             border-radius: 5px;
             border: 1px solid #ccc;
+            width: 100%;
         }
         .fields {
             display: flex;
-            gap: 50px;
+            gap: 20px;
+            flex-wrap: wrap;
         }
         .fields input {
-            width: 24%;
+            flex: 1;
+            min-width: 150px;
         }
         textarea {
             resize: none;
-            width: 640px;
             height: 120px;
         }
         .char-count {
@@ -87,8 +90,8 @@
             padding: 0.5rem 1rem;
             border: none;
             border-radius: 100px;
-            width: 100px;
             cursor: pointer;
+            width: 100%;
         }
         button.submit:hover {
             background: #0056b3;
@@ -96,6 +99,19 @@
         .feedback-button {
             display: flex;
             justify-content: center;
+        }
+
+        @media (max-width: 600px) {
+            .fields {
+                flex-direction: column;
+            }
+            .fields input {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            textarea {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -162,7 +178,7 @@
             .then(data => {
                 if (data.result === "Success") {
                     alert("Feedback submitted successfully!");
-                    document.getElementById('feedback').reset(); // Reset form on success
+                    document.getElementById('feedback').reset();
                 } else {
                     alert("Error submitting feedback.");
                 }
